@@ -1,27 +1,34 @@
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:plant_ai/auth/auth.dart';
 import 'package:plant_ai/auth/authentification.dart';
 import 'package:plant_ai/view/home_page.dart';
-// import 'package:plant_ai/auth/auth.dart';
-// import 'package:plant_ai/authr/authentification.dart';
-// import 'package:plant_ai/view/home_page.dart';
 import 'package:plant_ai/view/register_screen.dart';
 import 'package:plant_ai/widgets/my_button.dart';
 import 'package:plant_ai/widgets/my_textfield.dart';
-// import 'package:plant_ai/widgets/square_tile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
-  // User Name
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final emailController = TextEditingController();
+  final formField = GlobalKey<FormState>();
+  final passwordController = TextEditingController();
+  final Auth auth = Auth();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     // final width = MediaQuery.of(context).size.width;
-    final userNameController = TextEditingController();
-    final formField = GlobalKey<FormState>();
-    final passwordController = TextEditingController();
-    final Auth auth = Auth();
 
     return Scaffold(
       backgroundColor: Colors.grey[300],
@@ -29,12 +36,10 @@ class LoginScreen extends StatelessWidget {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
               children: [
                 // logo
                 Container(
-                  margin: EdgeInsets.only(top: 40),
+                  margin: const EdgeInsets.only(top: 40),
                   child: Image.asset(
                     "assets/plantai2.png",
                     height: 140,
@@ -50,7 +55,7 @@ class LoginScreen extends StatelessWidget {
                       children: [
                         MyTextField(
                           prefix: const Icon(Icons.person),
-                          controller: userNameController,
+                          controller: emailController,
                           hintText: 'Email Address or Number',
                           obscureText: false,
                           validator: (value) {
@@ -62,7 +67,7 @@ class LoginScreen extends StatelessWidget {
                             if (value.isEmpty) {
                               return "Enter your Address or Number";
                             } else if (!emailValid && !numberValid) {
-                              debugPrint(userNameController.text);
+                              debugPrint(emailController.text);
 
                               return "Enter Valid Address or Number";
                             }
@@ -95,10 +100,9 @@ class LoginScreen extends StatelessWidget {
                 ),
                 SizedBox(height: height / 12),
                 MyButton(
-                  user: userNameController.text,
                   title: 'Login',
-                  passWordController: passwordController,
-                  userNameController: userNameController,
+                  passwordController: passwordController,
+                  emailController: emailController,
                   formField: formField,
                 ),
 
@@ -106,7 +110,7 @@ class LoginScreen extends StatelessWidget {
 
                 // or continue with
                 Container(
-                  margin: EdgeInsets.only(top: 12),
+                  margin: const EdgeInsets.only(top: 12),
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
                     children: [
@@ -142,13 +146,15 @@ class LoginScreen extends StatelessWidget {
                       // google button
                       IconButton(
                           onPressed: () {
-                            auth
-                                .hangleSignIn()
-                                .then((value) => Navigator.pushReplacement(
+                            auth.hangleSignIn().then((value) {
+                              if (auth.userId != null) {
+                                Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                         // ignore: prefer_const_constructors
-                                        builder: (context) => HomeScreen())));
+                                        builder: (context) => HomeScreen()));
+                              }
+                            });
                           },
                           icon: Image.asset(
                             "assets/logo/google-logo.png",
@@ -159,9 +165,9 @@ class LoginScreen extends StatelessWidget {
                       const SizedBox(width: 25),
 
                       // apple button
-                      IconButton(
-                          onPressed: () {},
-                          icon: Image.asset("assets/logo/facebook-logo.png")),
+                      // IconButton(
+                      //     onPressed: () {},
+                      //     icon: Image.asset("assets/logo/facebook-logo.png")),
                     ],
                   ),
                 ),
@@ -170,7 +176,7 @@ class LoginScreen extends StatelessWidget {
 
                 // not a member? register now
                 Container(
-                  margin: EdgeInsets.only(bottom: 20),
+                  margin: const EdgeInsets.only(bottom: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -182,7 +188,7 @@ class LoginScreen extends StatelessWidget {
                       // SizedBox(width: width / 5),
                       TextButton(
                         onPressed: () {
-                          Image image = Image.asset('image.jpg');
+                          // Image image = Image.asset('image.jpg');Z
 
                           Navigator.push(
                             context,

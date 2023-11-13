@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_ai/auth/authentification.dart';
+import 'package:plant_ai/services/firestore.dart';
+import 'package:plant_ai/view/home_page.dart';
 import 'package:plant_ai/view/login_page.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -13,35 +18,92 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final emailController = TextEditingController();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
-  final passController = TextEditingController();
+  final passwordController = TextEditingController();
   final confirmPassController = TextEditingController();
   final contactController = TextEditingController();
   bool passToggle = true;
   bool confirmPassToggle = true;
-  // final ThemeManager themeManager = Login.themeManager;
+  bool isLoading = false;
+  late ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
+  final db = FirebaseFirestore.instance;
+  final auth = Auth();
+  late UserCredential? credential;
+
+  dynamic createUserWithEmailAndPassword() async {
+    try {
+      credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        return scaffoldMessenger.showSnackBar(const SnackBar(
+            content: Text("The password provided is too weak.")));
+      } else if (e.code == 'email-already-in-use') {
+        return scaffoldMessenger.showSnackBar(const SnackBar(
+            content: Text("'The account already exists for that email")));
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void submit() async {
+    if (formField.currentState!.validate()) {
+      try {
+        await createUserWithEmailAndPassword();
+        // final userId = auth.userId;
+        print("credentail => $credential");
+        final user = Firestore(
+            firstName: "firstNameController.text",
+            lastName: lastNameController.text,
+            number: contactController.text,
+            email: emailController.text,
+            password: passwordController.text);
+        final docRef = db
+            .collection("users")
+            .withConverter(
+                fromFirestore: Firestore.fromFirestore,
+                toFirestore: (Firestore user, options) => user.toFirestore())
+            .doc(credential!.user!.uid.toString());
+        await docRef.set(user).then((value) {
+          if (credential != null) {
+            Navigator.push(
+                context,
+                // ignore: prefer_const_constructors
+                MaterialPageRoute(builder: (context) => LoginScreen()));
+          }
+        });
+      } catch (e) {
+        print("Erreur lors de la recuperation de l'utilisateur $e");
+      }
+      print("Data Added Successfully");
+      // emailController.clear();
+      // passwordController.clear();
+      // confirmPassController.clear();
+      // firstNameController.clear();
+      // lastNameController.clear();
+      // contactController.clear();
+    }
+  }
+
+  void test() async {
+    final city = <String, String>{
+      "name": "Los Angeles",
+      "state": "CA",
+      "country": "USA"
+    };
+    db
+        .collection("cities")
+        .doc("LA")
+        .set(city)
+        .onError((e, _) => print("Error writing document: $e"));
+  }
 
   @override
   Widget build(BuildContext context) {
-    // final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    // bool isDark = Theme.of(context).brightness == Brightness.dark;
-    // TextTheme textTheme = Theme.of(context).textTheme;
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
     return Scaffold(
-      key: scaffoldKey,
-      // appBar: AppBar(
-      //   title: const Text("Form Page"),
-      //   centerTitle: true,
-      //   // backgroundColor: Colors.transparent,
-      //   // actions: [
-      //   //   Switch(
-      //   //       value: themeManager.themeMode == ThemeMode.dark,
-      //   //       onChanged: (newValue) {
-      //   //         themeManager.toggleTheme(newValue);
-      //   //       })
-      //   // ],
-      // ),
       body: SingleChildScrollView(
         child: Center(
           child: Container(
@@ -56,11 +118,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 50,
                   ),
                   Image.asset(
-                    "plantai2.png",
+                    "assets/plantai2.png",
                     height: 150,
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 40,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -165,7 +227,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.visiblePassword,
-                    controller: passController,
+                    controller: passwordController,
                     obscureText: passToggle,
                     decoration: InputDecoration(
                         labelText: "PassWord",
@@ -185,7 +247,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Enter Password";
-                      } else if (passController.text.length < 6) {
+                      } else if (passwordController.text.length < 6) {
                         return "Password Lenght Should be more than 6 characters";
                       }
                       return null;
@@ -217,7 +279,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       if (value!.isEmpty) {
                         return "Please entrer re-password";
                       } else if (confirmPassController.text !=
-                          passController.text) {
+                          passwordController.text) {
                         return "Password Doesn't Match";
                       }
                       return null;
@@ -228,20 +290,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   InkWell(
                     onTap: () {
-                      if (formField.currentState!.validate()) {
-                        print("Data Added Successfully");
-                        emailController.clear();
-                        passController.clear();
-                        confirmPassController.clear();
-                        firstNameController.clear();
-                        lastNameController.clear();
-                        contactController.clear();
-                      }
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginScreen()),
-                      );
+                      submit();
+                      // Navigator.pushReplacement(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) => const LoginScreen()),
+                      // );
                     },
                     child: Container(
                       height: 50,
@@ -249,16 +303,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       decoration: BoxDecoration(
                           color: Colors.indigo,
                           borderRadius: BorderRadius.circular(20)),
-                      child: const Center(
-                        child: Text(
-                          "Create Account",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                      child: isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : const Center(
+                              child: Text(
+                                "Create Account",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                     ),
                   ),
                   const SizedBox(
@@ -280,7 +338,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           );
                         },
                         child: const Text(
-                          "Sign Up",
+                          "Sign In",
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),

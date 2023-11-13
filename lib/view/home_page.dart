@@ -13,18 +13,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final auth = Auth().auth;
-
+  final auth = Auth();
   final GoogleSignIn googleSignIn = Auth().googleSignIn;
 
-  Future<void> handleSignOut() async {
-    try {
-      await googleSignIn.signOut();
-      await auth.signOut();
-    } catch (e) {
-      print("error signing out: $e");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: width * 0.7,
               padding: const EdgeInsets.all(20.0),
               child: Text(
-                "Welcome Back, ${Auth().firstName} ",
+                "Welcome Back, ${auth.firstName() ?? ""} ",
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
@@ -75,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: const BottomNavigation(),
       floatingActionButton: FloatingActionButton(onPressed: () async {
-        await handleSignOut();
+        await auth.handleSignOut();
       }),
     );
   }

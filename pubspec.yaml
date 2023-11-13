@@ -47,6 +47,8 @@ dependencies:
   tflite_flutter: ^0.10.0
   image_picker: ^1.0.4
   flutter_cache_manager: ^3.3.1
+  flutter_launcher_icons: ^0.13.1
+  shared_preferences: ^2.2.2
   # toggle_switch: ^2.1.0
   # firebase_ui_auth: ^1.9.0
   # firebase_ui_oauth_facebook: ^1.2.12
@@ -61,9 +63,12 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^3.0.1
+  flutter_launcher_icons: "^0.13.1"
 
-flutter_icons:
-  android: "assets/plantai2"
+flutter_launcher_icons:
+  android: "launcher_icon"
+  image_path: "assets/plantai2.png"
+  min_sdk_android: 26
 
 flutter:
   uses-material-design: true

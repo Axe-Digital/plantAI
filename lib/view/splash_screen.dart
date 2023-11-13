@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:plant_ai/auth/auth.dart';
+// import 'package:plant_ai/auth/auth.dart';
 import 'package:plant_ai/auth/authentification.dart';
 import 'package:plant_ai/view/home_page.dart';
 import 'package:plant_ai/view/login_page.dart';
@@ -32,12 +32,37 @@ class _SplashPageState extends State<SplashScreen> {
         Navigator.pushReplacement(
           context,
           // ignore: prefer_const_constructors
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          PageRouteBuilder(
+            transitionDuration: const Duration(
+                seconds:
+                    2), // Durée de l'animation (500 millisecondes dans cet exemple)
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                // ignore: prefer_const_constructors
+                HomeScreen(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              var begin = const Offset(
+                  1.0, 0.0); // Position de départ de l'animation (de la droite)
+              var end =
+                  Offset.zero; // Position d'arrivée de l'animation (au centre)
+              var curve = Curves
+                  .ease; // Courbe d'animation (facultatif, vous pouvez choisir une autre courbe)
+
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              var offsetAnimation = animation.drive(tween);
+
+              return SlideTransition(
+                position: offsetAnimation,
+                child: child,
+              );
+            },
+          ),
         );
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
       }
     } catch (e) {

@@ -10,7 +10,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       // automaticallyImplyLeading: false,
       title: const Text(
-        "plant_ai",
+        "plantAI",
         style: TextStyle(fontSize: 20),
       ),
       

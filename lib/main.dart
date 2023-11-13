@@ -13,6 +13,8 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
+
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -34,10 +36,9 @@ class _MyAppState extends State<MyApp> {
             appBarTheme: const AppBarTheme(color: Colors.green),
           ),
           darkTheme: ThemeData.dark().copyWith(
-            textTheme: ThemeData.dark().textTheme.copyWith(
-              bodyLarge: const TextStyle(color: Colors.black),
-            )
-          ),
+              textTheme: ThemeData.dark().textTheme.copyWith(
+                    bodyLarge: const TextStyle(color: Colors.black),
+                  )),
           themeMode: appState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
         );
       }),
