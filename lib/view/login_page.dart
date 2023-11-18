@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final formField = GlobalKey<FormState>();
   final passwordController = TextEditingController();
+  bool passToggle = true;
   final Auth auth = Auth();
 
   @override
@@ -82,7 +83,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           prefix: const Icon(Icons.lock),
                           controller: passwordController,
                           hintText: 'Password',
-                          obscureText: true,
+                          obscureText: passToggle,
+                          suffixIcon: InkWell(
+                            onTap: () {
+                              setState(() {
+                                passToggle = !passToggle;
+                              });
+                            },
+                            child: Icon(passToggle
+                                ? Icons.visibility_off
+                                : Icons.visibility),
+                          ),
                           validator: (value) {
                             if (value!.isEmpty) {
                               return "Enter Password";
@@ -164,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       const SizedBox(width: 25),
 
-                      // apple button
+                      // facebook button
                       // IconButton(
                       //     onPressed: () {},
                       //     icon: Image.asset("assets/logo/facebook-logo.png")),

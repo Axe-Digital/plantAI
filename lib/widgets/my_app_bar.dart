@@ -7,23 +7,24 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final isDark =
+        Provider.of<AppStateNotifier>(context, listen: false).isDarkMode;
     return AppBar(
       // automaticallyImplyLeading: false,
-      title: const Text(
-        "plantAI",
-        style: TextStyle(fontSize: 20),
-      ),
-      
-      // backgroundColor: Colors.transparent,
-      actions: [
-        Row(
+      // title: const Text(
+      //   "plantAI",
+      //   style: TextStyle(fontSize: 20),
+      // ),
+      title: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Row(
           children: [
             Icon(
               Provider.of<AppStateNotifier>(context, listen: false).isDarkMode
                   ? Icons.wb_sunny_outlined
                   : Icons.sunny,
             ),
-            const SizedBox(width: 8),
             Switch(
                 value: Provider.of<AppStateNotifier>(context, listen: false)
                     .isDarkMode,
@@ -31,9 +32,39 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 onChanged: (newValue) {
                   Provider.of<AppStateNotifier>(context, listen: false)
                       .updateTheme(newValue);
-                  ;
                 }),
           ],
+        ),
+      ),
+      elevation: 0,
+
+      // bottom: const PreferredSize(
+      //   preferredSize: Size.fromHeight(0),
+      //   child: SizedBox.shrink(),
+      // ),
+
+      // backgroundColor: Colors.transparent,
+      actions: [
+        Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Row(
+            children: [
+              // const SizedBox(width: 20),
+              // InkWell(),
+
+              Icon(Icons.search),
+              SizedBox(width: width * 0.05),
+
+              Center(
+                  child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.person))),
+            ],
+          ),
         )
       ],
       // elevation: 0,
@@ -41,5 +72,5 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(60);
+  Size get preferredSize => const Size.fromHeight(80);
 }

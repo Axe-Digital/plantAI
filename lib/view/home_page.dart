@@ -1,103 +1,105 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:plant_ai/view/camera.dart';
+import 'package:plant_ai/services/camera_manager.dart';
+import 'package:plant_ai/view/camera_page.dart';
+import 'package:plant_ai/widgets/main_piece.dart';
 import 'package:plant_ai/widgets/my_app_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:plant_ai/auth/authentification.dart';
+import 'package:plant_ai/services/camera_manager.dart';
+// import 'package:plant_ai/main.dart' as M;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<StatefulWidget> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final auth = Auth();
-  final GoogleSignIn googleSignIn = Auth().googleSignIn;
+  int currentTabIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+
+    // CameraManager.initialize();
+    // .then((_) {
+    //   if (!mounted) {
+    //     return;
+    //   }
+    //   setState(() {});
+    // }).catchError((Object e) {
+    //   if (e is CameraException) {
+    //     switch (e.code) {
+    //       case 'CameraAccessDenied':
+    //         print("Access was denied");
+    //         // Handle access errors here.
+    //         break;
+    //       default:
+    //         print(e.description); // Handle other errors here.
+    //         break;
+    //     }
+    //   }
+    // });
+  }
+
+  @override
+  void dispose() {
+    super.dispose;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final cameraController = CameraManager.cameraController;
+    final List<Widget> kTabPages = [
+      const MainPiece(),
+      Center(
+          child: Image.asset(
+        "assets/fougere.png",
+        width: 50,
+      )),
+    ];
+
+    final List<BottomNavigationBarItem> kBottomnavigationItems = [
+      const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+      BottomNavigationBarItem(
+          icon: Image.asset(
+            'assets/fougere.png',
+            width: 70,
+          ),
+          label: 'plantes'),
+    ];
+    assert(kTabPages.length == kBottomnavigationItems.length);
+
+    BottomNavigationBar bottomNavBar = BottomNavigationBar(
+        items: kBottomnavigationItems,
+        currentIndex: currentTabIndex,
+        type: BottomNavigationBarType.fixed,
+        onTap: (int index) => setState(() {
+              currentTabIndex = index;
+            }));
 
     return Scaffold(
       // ignore: prefer_const_constructors
       appBar: MyAppBar(),
-      body: Center(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 15,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextField(
-                controller: null,
-                decoration: const InputDecoration(
-                  hintText: 'Rechercher...',
-                  suffixIcon: Icon(Icons.search),
-                ),
-                onSubmitted: (value) {
-                  // Gérer la soumission de la recherche ici
-                  print('Recherche soumise: $value');
-                },
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              // margin: EdgeInsets.symmetric(horizontal: 50),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black)),
-              width: width * 0.7,
-              padding: const EdgeInsets.all(20.0),
-              child: Text(
-                "Welcome Back, ${auth.firstName() ?? ""} ",
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
-            const Camera(),
-          ],
-        ),
+      // body: kTabPages[currentTabIndex],
+      body: CameraPreview(cameraController),
+      // ignore: prefer_const_constructors
+      bottomNavigationBar: bottomNavBar,
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (context) => CameraApp()));
+        },
+        backgroundColor: Colors.green,
+        child: const Icon(Icons.camera_alt_outlined),
       ),
-      bottomNavigationBar: const BottomNavigation(),
-      floatingActionButton: FloatingActionButton(onPressed: () async {
-        await auth.handleSignOut();
-      }),
-    );
-  }
-}
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: FloatingActionButton(
+      // onPressed: () {
 
-class BottomNavigation extends StatefulWidget {
-  const BottomNavigation({super.key});
-
-  @override
-  State<BottomNavigation> createState() => _BottomNavigationState();
-}
-
-class _BottomNavigationState extends State<BottomNavigation> {
-  final kBottomNavBarItems = <BottomNavigationBarItem>[
-    const BottomNavigationBarItem(icon: Icon(Icons.abc), label: 'Tab1'),
-    const BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
-  ];
-
-  int currentTabIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: kBottomNavBarItems,
-      currentIndex: currentTabIndex,
-      type: BottomNavigationBarType.fixed,
-      onTap: (int index) {
-        setState(() {
-          currentTabIndex = index;
-        });
-      },
+      // }
+      // }),
     );
   }
 }

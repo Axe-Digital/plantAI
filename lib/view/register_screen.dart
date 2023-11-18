@@ -5,6 +5,7 @@ import 'package:plant_ai/auth/authentification.dart';
 import 'package:plant_ai/services/firestore.dart';
 import 'package:plant_ai/view/home_page.dart';
 import 'package:plant_ai/view/login_page.dart';
+import 'package:plant_ai/widgets/snackbar_utils.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -29,45 +30,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final auth = Auth();
   late UserCredential? credential;
 
-  dynamic createUserWithEmailAndPassword() async {
-    try {
-      credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        return scaffoldMessenger.showSnackBar(const SnackBar(
-            content: Text("The password provided is too weak.")));
-      } else if (e.code == 'email-already-in-use') {
-        return scaffoldMessenger.showSnackBar(const SnackBar(
-            content: Text("'The account already exists for that email")));
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
   void submit() async {
     if (formField.currentState!.validate()) {
       try {
-        await createUserWithEmailAndPassword();
-        // final userId = auth.userId;
-        print("credentail => $credential");
+        await auth.createUserWithEmailAndPassword(
+            emailController.text, passwordController.text, showSnackBarMessage);
         final user = Firestore(
-            firstName: "firstNameController.text",
+            firstName: firstNameController.text,
             lastName: lastNameController.text,
             number: contactController.text,
             email: emailController.text,
             password: passwordController.text);
-        final docRef = db
-            .collection("users")
-            .withConverter(
-                fromFirestore: Firestore.fromFirestore,
-                toFirestore: (Firestore user, options) => user.toFirestore())
-            .doc(credential!.user!.uid.toString());
-        await docRef.set(user).then((value) {
-          if (credential != null) {
+        Firestore.saveUserName = firstNameController.text;
+        user.uploadData().then((value) {
+          if (auth.userId != null) {
             Navigator.push(
                 context,
                 // ignore: prefer_const_constructors
@@ -87,23 +63,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  void test() async {
-    final city = <String, String>{
-      "name": "Los Angeles",
-      "state": "CA",
-      "country": "USA"
-    };
-    db
-        .collection("cities")
-        .doc("LA")
-        .set(city)
-        .onError((e, _) => print("Error writing document: $e"));
-  }
-
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       body: SingleChildScrollView(
         child: Center(
           child: Container(
@@ -241,8 +205,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             });
                           },
                           child: Icon(passToggle
-                              ? Icons.visibility
-                              : Icons.visibility_off),
+                              ? Icons.visibility_off
+                              : Icons.visibility),
                         )),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -272,8 +236,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             });
                           },
                           child: Icon(confirmPassToggle
-                              ? Icons.visibility
-                              : Icons.visibility_off),
+                              ? Icons.visibility_off
+                              : Icons.visibility),
                         )),
                     validator: (value) {
                       if (value!.isEmpty) {

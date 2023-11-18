@@ -1,19 +1,25 @@
-import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
+import "package:flutter/material.dart";
 import 'package:plant_ai/firebase_options.dart';
+import 'package:plant_ai/services/camera_manager.dart';
 import 'package:plant_ai/theme/theme_manager.dart';
 import 'package:plant_ai/view/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+// import 'package:plant_ai/main.dart';
+
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await CameraManager.initialize();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
 }
-
-
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -33,9 +39,11 @@ class _MyAppState extends State<MyApp> {
           title: 'Flutter Demo',
           home: const SplashScreen(),
           theme: ThemeData.light().copyWith(
-            appBarTheme: const AppBarTheme(color: Colors.green),
-          ),
+              appBarTheme: AppBarTheme(color: Colors.grey[200]),
+              scaffoldBackgroundColor: Colors.grey[200]),
           darkTheme: ThemeData.dark().copyWith(
+              buttonTheme: const ButtonThemeData(buttonColor: Colors.black),
+              scaffoldBackgroundColor: Color(0xFF424242),
               textTheme: ThemeData.dark().textTheme.copyWith(
                     bodyLarge: const TextStyle(color: Colors.black),
                   )),

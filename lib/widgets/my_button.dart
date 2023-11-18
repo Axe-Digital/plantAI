@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:plant_ai/auth/authentification.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_ai/auth/authentification.dart';
+import 'package:plant_ai/services/firestore.dart';
 import 'package:plant_ai/view/home_page.dart';
+import 'package:plant_ai/widgets/snackbar_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyButton extends StatefulWidget {
@@ -26,48 +28,52 @@ class MyButton extends StatefulWidget {
 class _MyButtonState extends State<MyButton> {
   bool isLoading = true;
   late ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
-  late SharedPreferences prefs;
+  // late SharedPreferences prefs;
   final auth = Auth();
+  late UserCredential credential;
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-
-    signInWithEmailAndPassword() async {
+    signIn() async {
       try {
-        final credential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(
-                email: widget.emailController.text,
-                password: widget.passwordController.text);
+        // await auth.signInWithEmailAndPassword(widget.emailController.text,
+        //     widget.passwordController.text, showSnackBarMessage);
 
-        if (credential.user != null) {
-          prefs = await SharedPreferences.getInstance();
-          await prefs.setString('user', credential.user.toString());
-          setState(() {
-            // widget.onPressed!();
-          });
+        try {
+          final credential = await FirebaseAuth.instance
+              .signInWithEmailAndPassword(
+                  email: widget.emailController.text,
+                  password: widget.passwordController.text);
+        } on FirebaseAuthException catch (e) {
+          print("Error Error $e");
+
+          if (e.code == 'user-not-found') {
+            return showSnackBarMessage("No user found for that email.",
+                context: context);
+          } else if (e.code == 'wrong-password') {
+            return showSnackBarMessage("Wrong password provided for that user.",
+                context: context);
+          }
+        } catch (e) {
+          print("Error Error $e");
         }
-      } on FirebaseAuthException catch (e) {
-        if (e.code == "weak-password") {
-          return scaffoldMessenger.showSnackBar(
-              const SnackBar(content: Text("No User for the mail")));
-        } else if (e.code == "wrong-password") {
-          return scaffoldMessenger.showSnackBar(const SnackBar(
-              content: Text("Wrong password provided for that user")));
-        }
+
+        await Firestore.getFirstName().then((value) {
+          print("my_button");
+          print(value);
+          Firestore.saveUserName = value;
+          if (auth.userId != null) {
+            Navigator.pushReplacement(
+                context,
+                // ignore: prefer_const_constructors
+                MaterialPageRoute(builder: (context) => HomeScreen()));
+          }
+        });
+      } catch (e) {
+        print(e);
       }
-    }
-
-    void signIn() async {
-      signInWithEmailAndPassword().then((value) {
-        if (auth.userId != null) {
-          Navigator.pushReplacement(
-              context,
-              // ignore: prefer_const_constructors
-              MaterialPageRoute(builder: (context) => HomeScreen()));
-        }
-      });
     }
 
     return InkWell(

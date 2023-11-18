@@ -5,13 +5,15 @@ class MyTextField extends StatelessWidget {
   final Icon? prefix;
   final String hintText;
   final bool obscureText;
+  final Widget? suffixIcon;
   final String? Function(String?) validator;
   const MyTextField({
     super.key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
-    required this.validator, this.prefix,
+    required this.validator,
+    this.prefix, this.suffixIcon,
   });
 
   @override
@@ -25,6 +27,7 @@ class MyTextField extends StatelessWidget {
           labelText: hintText,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
           prefixIcon: prefix,
+          suffixIcon: suffixIcon 
         ),
         validator: validator,
       ),
