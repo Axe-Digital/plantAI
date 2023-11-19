@@ -1,19 +1,20 @@
 import 'package:camera/camera.dart';
 import "package:flutter/material.dart";
 import 'package:plant_ai/firebase_options.dart';
-import 'package:plant_ai/services/camera_manager.dart';
+import 'package:plant_ai/model/camera_manager.dart';
+import 'package:plant_ai/model/model.dart';
 import 'package:plant_ai/theme/theme_manager.dart';
+import 'package:plant_ai/view/home_page.dart';
+import 'package:plant_ai/view/plant_page.dart';
 import 'package:plant_ai/view/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 // import 'package:plant_ai/main.dart';
 
-
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await CameraManager.initialize();
+  // await CameraManager.initialize();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -31,8 +32,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AppStateNotifier(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppStateNotifier>(
+          create: (_) => AppStateNotifier(),
+        ),
+        ChangeNotifierProvider<Model>(create: (_) => Model()),
+
+        // Ajoutez d'autres providers ici si nécessaire
+      ],
       child: Consumer<AppStateNotifier>(builder: (context, appState, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,

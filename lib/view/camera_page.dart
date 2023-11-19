@@ -2,37 +2,54 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-
-late List<CameraDescription> _cameras;
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  try {
-    _cameras = await availableCameras();
-  } catch (e) {
-    print(e);
-  }
-  runApp(const MaterialApp(
-    home: CameraApp(),
-  ));
-}
+import 'package:plant_ai/model/camera_manager.dart';
+import 'package:plant_ai/model/model.dart';
+import 'package:plant_ai/widgets/gallery.dart';
 
 /// CameraApp is the Main Application.
 class CameraApp extends StatefulWidget {
   /// Default Constructor
-  const CameraApp({super.key});
+  final CameraDescription camera;
+
+  const CameraApp({super.key, required this.camera});
 
   @override
   State<CameraApp> createState() => _CameraAppState();
 }
 
 class _CameraAppState extends State<CameraApp> {
-  late CameraController controller;
+  late CameraController _cameraController = CameraManager.cameraController;
+
+  Future<void> controlleCamera() async {
+    if (!_cameraController.value.isInitialized) {
+      return;
+    }
+    if (_cameraController.value.isTakingPicture) {
+      return;
+    }
+    _cameraController.setFlashMode(FlashMode.auto).then((_) {
+      return _cameraController.takePicture();
+    }).then((XFile file) {
+      setState(() {
+        File imageFile = File(file.path);
+        Model().updateFile(imageFile);
+      });
+    }).onError((error, stackTrace) {
+      if (error is CameraException) {
+        debugPrint("Error occurred while taking picture $error");
+      } else {
+        debugPrint("Unknown error occurred: $error");
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    controller.initialize().then((_) {
+    _cameraController =
+        CameraController(widget.camera, ResolutionPreset.medium);
+
+    _cameraController.initialize().then((_) {
       if (!mounted) {
         return;
       }
@@ -53,43 +70,69 @@ class _CameraAppState extends State<CameraApp> {
   }
 
   @override
+  void dispose() {
+    _cameraController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Stack(
       children: [
         Container(
           height: double.infinity,
-          child: CameraPreview(controller),
+          width: width,
+          child: CameraPreview(_cameraController),
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
+          // mainAxisSize: MainAxisSize.max,
           children: [
-            Center(
-              child: Container(
-                  margin: EdgeInsets.all(20),
-                  child: MaterialButton(
-                    onPressed: () async {
-                      if (!controller.value.isInitialized) {
-                        return;
-                      }
-                      if (controller.value.isTakingPicture) {
-                        return;
-                      }
-
-                      try {
-                        await controller.setFlashMode(FlashMode.auto);
-                        XFile file = await controller.takePicture();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ImagePreview(file)));
-                      } on CameraException catch (e) {
-                        debugPrint("Error occured while taking picture $e");
-                      }
+            Container(
+              color: Colors.white,
+              width: width,
+              // margin: const EdgeInsets.all(20),
+              height: height * 0.09,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Gallery(),
+                  RawMaterialButton(
+                    onPressed: () {
+                      controlleCamera();
                     },
-                    color: Colors.white,
-                    child: Text("Take a picture"),
-                  )),
+                    elevation: 2.0,
+                    fillColor: Colors.white,
+                    padding: EdgeInsets.all(15.0),
+                    shape: CircleBorder(),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.green,
+                      radius: 15.0,
+                      child: Icon(
+                        Icons.camera_alt,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  MaterialButton(
+                    onPressed: null,
+                    child: InkWell(
+                      onTap: () {},
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Conseil pour"),
+                          Text("les photos "),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         )

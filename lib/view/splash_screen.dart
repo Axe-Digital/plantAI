@@ -15,14 +15,10 @@ class SplashScreen extends StatefulWidget {
 class _SplashPageState extends State<SplashScreen> {
   Auth auth = Auth();
   late String? user = auth.userId;
-  // late User? user = auth.user;
 
   @override
   void initState() {
     super.initState();
-
-    print("auth.userId => ${auth.userId}");
-    print("user => $user");
     // Définir une temporisation pour afficher la page de splash
     Future.delayed(const Duration(seconds: 1), () {
       switchEvent(); // Naviguer vers la page suivante après la temporisation
@@ -76,8 +72,6 @@ class _SplashPageState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     // final width = MediaQuery.of(context).size.width;
-    print("auth.userId2 => ${auth.userId}");
-    print("user2 => $user");
     return Scaffold(
         backgroundColor: Colors.grey[300],
 

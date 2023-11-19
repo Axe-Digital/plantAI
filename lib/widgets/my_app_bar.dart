@@ -11,7 +11,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     final isDark =
         Provider.of<AppStateNotifier>(context, listen: false).isDarkMode;
     return AppBar(
-      // automaticallyImplyLeading: false,
+      automaticallyImplyLeading: false,
       // title: const Text(
       //   "plantAI",
       //   style: TextStyle(fontSize: 20),
