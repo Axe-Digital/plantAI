@@ -38,9 +38,6 @@ class _MyButtonState extends State<MyButton> {
 
     signIn() async {
       try {
-        // await auth.signInWithEmailAndPassword(widget.emailController.text,
-        //     widget.passwordController.text, showSnackBarMessage);
-
         try {
           final credential = await FirebaseAuth.instance
               .signInWithEmailAndPassword(
@@ -68,7 +65,7 @@ class _MyButtonState extends State<MyButton> {
             Navigator.pushReplacement(
                 context,
                 // ignore: prefer_const_constructors
-                MaterialPageRoute(builder: (context) => HomeScreen()));
+                MaterialPageRoute(builder: (context) => HomeScreen(currentTabIndex: 0,)));
           }
         });
       } catch (e) {
@@ -80,16 +77,7 @@ class _MyButtonState extends State<MyButton> {
       onTap: () {
         if (widget.formField.currentState!.validate()) {
           signIn();
-
           print("Data Added Successfully");
-          // if (widget.user != null) {
-
-          // }
-
-          // passWordController.clear();
-          // userNameController.clear();
-          // lastNameController.clear();
-          // contactController.clear();
         }
       },
       child: Container(

@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_ai/model/camera_manager.dart';
 import 'package:plant_ai/model/model.dart';
+import 'package:plant_ai/view/home_page.dart';
 import 'package:plant_ai/widgets/gallery.dart';
 
 /// CameraApp is the Main Application.
@@ -43,6 +44,20 @@ class _CameraAppState extends State<CameraApp> {
     });
   }
 
+  Future<void> onPressed() async {
+    await controlleCamera().then((value) {
+      Future.delayed(const Duration(seconds: 3), () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                // ignore: prefer_const_constructors
+                builder: (context) =>  HomeScreen(
+                      currentTabIndex: 1,
+                    )));
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -79,13 +94,30 @@ class _CameraAppState extends State<CameraApp> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    print("height : $height");
     return Stack(
+      alignment: Alignment.topCenter,
       children: [
         Container(
           height: double.infinity,
           width: width,
           child: CameraPreview(_cameraController),
         ),
+        Positioned(
+            child: Center(
+          child: Container(
+            width: width / 1.5, // Largeur du cadre
+            height: height / 2.7, // Hauteur du cadre
+            decoration: BoxDecoration(
+              borderRadius:
+                  BorderRadius.circular(20), // Rayon des coins arrondis
+              border: Border.all(
+                color: Colors.white, // Couleur blanche pour la bordure
+                width: 4, // Épaisseur de la bordure
+              ),
+            ),
+          ),
+        )),
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -99,16 +131,16 @@ class _CameraAppState extends State<CameraApp> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Gallery(),
+                  const Gallery(),
                   RawMaterialButton(
                     onPressed: () {
-                      controlleCamera();
+                      onPressed();
                     },
                     elevation: 2.0,
                     fillColor: Colors.white,
-                    padding: EdgeInsets.all(15.0),
-                    shape: CircleBorder(),
-                    child: CircleAvatar(
+                    padding: const EdgeInsets.all(15.0),
+                    shape: const CircleBorder(),
+                    child: const CircleAvatar(
                       backgroundColor: Colors.green,
                       radius: 15.0,
                       child: Icon(
@@ -137,26 +169,6 @@ class _CameraAppState extends State<CameraApp> {
           ],
         )
       ],
-    );
-  }
-}
-
-class ImagePreview extends StatefulWidget {
-  XFile file;
-
-  ImagePreview(this.file, {super.key});
-
-  @override
-  State<ImagePreview> createState() => _ImagePreviewState();
-}
-
-class _ImagePreviewState extends State<ImagePreview> {
-  @override
-  Widget build(BuildContext context) {
-    File picture = File(widget.file.path);
-
-    return Scaffold(
-      body: Center(child: Image.file(picture)),
     );
   }
 }

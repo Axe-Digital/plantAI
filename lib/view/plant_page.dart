@@ -1,6 +1,3 @@
-import 'dart:io' as io;
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_ai/model/model.dart';
 
@@ -15,105 +12,134 @@ class PlantesScreen extends StatefulWidget {
 
 class _PlantesScreenState extends State<PlantesScreen> {
   final textEditingTextField = TextEditingController();
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).textTheme;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return Builder(
-      builder: (context) {
-        return Scaffold(
-          body: Column(
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                    left: width / 44,
-                    right: width / 44),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  margin: const EdgeInsets.only(bottom: 10),
-                  child: TextField(
-                    controller: textEditingTextField,
-                    style: const TextStyle(color: Colors.white),
-                    maxLines: null,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      hintStyle: TextStyle(color: Color.fromARGB(139, 0, 0, 0)),
-                      hintText: 'Recherhcer des plantes',
-                      border: InputBorder.none,
+    return Builder(builder: (context) {
+      return Scaffold(
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          // mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: width * 0.9,
+              // decoration: BoxDecoration(
+              //   borderRadius: BorderRadius.circular(15),
+              //   // color: Colors.white,
+              // ),
+              child: TextField(
+                controller: textEditingTextField,
+                // style: const TextStyle(color: Colors.white),
+                maxLines: null,
+                decoration: InputDecoration(
+                  // fillColor: theme.bodyMedium!.color,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                    borderSide: const BorderSide(
+                      color: Colors.grey,
                     ),
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                    borderSide: BorderSide(
+                      color: Colors.green.withOpacity(0.5),
+                    ),
+                  ),
+
+                  prefixIcon: const Icon(Icons.search),
+                  hintStyle: theme.bodyMedium!,
+                  hintText: 'Recherhcer des plantes',
+                  border: InputBorder.none,
                 ),
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: Model.imageList.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Card(
-                          elevation: 20,
-                          color: const Color.fromARGB(255, 215, 208, 208),
-                          child: Container(
-                            width: width / 1.2,
-                            height: height / 4,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  // height: 60,
-                                  margin: const EdgeInsets.symmetric(vertical: 20),
-                                  child: Image.file(
-                                    Model.imageList[index],
-                                    width: 100,
-                                    // height: 100,
-                                  ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: Model.imageList.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      SizedBox(
+                        height: height / 20,
+                      ),
+                      Material(
+                        borderRadius: BorderRadius.circular(20),
+                        elevation: 20,
+                        child: Container(
+                          width: width / 1.2,
+                          height: height / 4,
+                          decoration: BoxDecoration(
+                              color: Colors.green.withOpacity(0.55),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: height / 5,
+                                width: width / 3,
+
+                                // color: Colors.red,
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 20),
+                                // child: Text("data"),
+                                child: Image.file(
+                                  Model.imageList[index],
+                                  width: 100,
+                                  height: 1000,
                                 ),
-                                Container(
-                                    width: width / 2.5,
-                                    height: height / 5,
-                                    margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Text(
-                                          "Picture $index",
-                                          style: const TextStyle(fontSize: 20),
-                                        ),
-                                        const SizedBox(
-                                          height: 40,
-                                        ),
-                                        const Text(
-                                          "cette tomate est malade",
-                                        ),
-                                        const Text("pp"),
-                                      ],
-                                    )),
-                              ],
-                            ),
+                              ),
+                              Container(
+                                  width: width / 4,
+                                  height: height / 5,
+                                  // color: Colors.red,
+                                  child: Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        "Picture ${index + 1}",
+                                        style: TextStyle(
+                                            fontSize:
+                                                theme.bodyMedium!.fontSize),
+                                      ),
+                                      const SizedBox(
+                                        height: 40,
+                                      ),
+                                      const Text(
+                                        "cette tomate est malade",
+                                      ),
+                                    ],
+                                  )),
+                            ],
                           ),
                         ),
-                        SizedBox(
-                          height: height / 50,
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                      ),
+                      SizedBox(
+                        height: height / 50,
+                      ),
+                    ],
+                  );
+                },
               ),
-            ],
-          ),
-        );
-      }
-    );
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

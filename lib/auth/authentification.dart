@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:plant_ai/services/firestore.dart';
-import 'package:plant_ai/widgets/snackbar_utils.dart';
+
 
 class Auth {
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -48,7 +47,7 @@ class Auth {
   signInWithEmailAndPassword(String email, String password,
       dynamic Function(String) showErrorSnackbar) async {
     try {
-      final credential = await FirebaseAuth.instance
+       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == "user-not-found") {
@@ -65,7 +64,7 @@ class Auth {
     dynamic Function(String) showErrorSnackbar,
   ) async {
     try {
-      final credential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

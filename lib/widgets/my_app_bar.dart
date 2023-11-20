@@ -8,16 +8,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final isDark =
-        Provider.of<AppStateNotifier>(context, listen: false).isDarkMode;
     return AppBar(
       automaticallyImplyLeading: false,
-      // title: const Text(
-      //   "plantAI",
-      //   style: TextStyle(fontSize: 20),
-      // ),
       title: Container(
-        margin: EdgeInsets.only(top: 20),
+        margin: const EdgeInsets.only(top: 20),
         child: Row(
           children: [
             Icon(
@@ -37,29 +31,19 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       elevation: 0,
-
-      // bottom: const PreferredSize(
-      //   preferredSize: Size.fromHeight(0),
-      //   child: SizedBox.shrink(),
-      // ),
-
-      // backgroundColor: Colors.transparent,
       actions: [
         Container(
-          margin: EdgeInsets.only(top: 20),
+          margin: const EdgeInsets.only(top: 20),
           child: Row(
             children: [
-              // const SizedBox(width: 20),
-              // InkWell(),
-
-              Icon(Icons.search),
+              const Icon(Icons.search),
               SizedBox(width: width * 0.05),
 
               Center(
                   child: Container(
                       width: 40,
                       height: 40,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(Icons.person))),
@@ -67,7 +51,6 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         )
       ],
-      // elevation: 0,
     );
   }
 

@@ -1,12 +1,8 @@
 import 'dart:io' as io;
-import 'dart:typed_data';
-import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-
 import 'package:tflite_flutter/tflite_flutter.dart';
 
-class Model with ChangeNotifier{
+class Model with ChangeNotifier {
   static List<io.File> imageList = [];
   static late String? _plantHealth;
   static String? get getPlantHealth => _plantHealth;
@@ -17,6 +13,9 @@ class Model with ChangeNotifier{
   static late Tensor inputTensor;
   static late Tensor outputTensor;
   static const String modelPath = "assets/model/model.tflite";
+  Map<String, double> dataMap = {
+    "Analyses effectuées": imageList.length.toDouble(),
+  };
 
   static Future<void> initialize() async {
     final options = InterpreterOptions();
@@ -28,6 +27,7 @@ class Model with ChangeNotifier{
 
   Future<void> updateFile(io.File file) async {
     imageList.add(file);
-      notifyListeners();
+    print("imageList : ${imageList.length}");
+    notifyListeners();
   }
 }

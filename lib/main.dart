@@ -1,11 +1,7 @@
-import 'package:camera/camera.dart';
 import "package:flutter/material.dart";
 import 'package:plant_ai/firebase_options.dart';
-import 'package:plant_ai/model/camera_manager.dart';
 import 'package:plant_ai/model/model.dart';
 import 'package:plant_ai/theme/theme_manager.dart';
-import 'package:plant_ai/view/home_page.dart';
-import 'package:plant_ai/view/plant_page.dart';
 import 'package:plant_ai/view/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -13,9 +9,6 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // await CameraManager.initialize();
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

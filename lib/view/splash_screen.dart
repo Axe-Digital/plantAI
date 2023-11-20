@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-// import 'package:plant_ai/auth/auth.dart';
 import 'package:plant_ai/auth/authentification.dart';
 import 'package:plant_ai/view/home_page.dart';
 import 'package:plant_ai/view/login_page.dart';
@@ -20,7 +18,7 @@ class _SplashPageState extends State<SplashScreen> {
   void initState() {
     super.initState();
     // Définir une temporisation pour afficher la page de splash
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 4), () {
       switchEvent(); // Naviguer vers la page suivante après la temporisation
     });
   }
@@ -37,7 +35,7 @@ class _SplashPageState extends State<SplashScreen> {
                     2), // Durée de l'animation (500 millisecondes dans cet exemple)
             pageBuilder: (context, animation, secondaryAnimation) =>
                 // ignore: prefer_const_constructors
-                HomeScreen(),
+                HomeScreen(currentTabIndex: 0,),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               var begin = const Offset(

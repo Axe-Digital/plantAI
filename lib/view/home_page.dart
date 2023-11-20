@@ -1,13 +1,13 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_ai/model/camera_manager.dart';
 import 'package:plant_ai/view/camera_page.dart';
 import 'package:plant_ai/view/plant_page.dart';
-import 'package:plant_ai/widgets/main_piece.dart';
+import 'package:plant_ai/view/main_piece.dart';
 import 'package:plant_ai/widgets/my_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final int currentTabIndex;
+  const HomeScreen({super.key, required this.currentTabIndex});
 
   @override
   State<StatefulWidget> createState() => _HomeScreenState();
@@ -15,11 +15,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentTabIndex = 0;
-  final PageController _pageController = PageController(initialPage: 0);
 
   @override
   void initState() {
     super.initState();
+    _currentTabIndex = widget.currentTabIndex;
   }
 
   @override
@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final List<Widget> kTabPages = [
       const MainPiece(),
-      PlantesScreen(),
+      const PlantesScreen(),
     ];
 
     List<BottomNavigationBarItem> kBottomnavigationItems = [
@@ -48,10 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       // ignore: prefer_const_constructors
       appBar: MyAppBar(),
-      body: PageView(children: [kTabPages[_currentTabIndex]]),
-      // body: CameraPreview(cameraController),
-      // ignore: prefer_const_constructors
-
+      resizeToAvoidBottomInset: false,
+      body: kTabPages[_currentTabIndex],
       bottomNavigationBar: BottomNavigationBar(
           items: kBottomnavigationItems,
           currentIndex: _currentTabIndex,

@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 import 'package:plant_ai/view/home_page.dart';
-import 'package:plant_ai/view/plant_page.dart';
-import 'package:tflite_flutter/tflite_flutter.dart';
 
 import 'package:plant_ai/model/model.dart';
 
 class Gallery extends StatefulWidget {
-  const Gallery({super.key});
+  // final Function(void) onPressed;
+  const Gallery({
+    super.key,
+  });
 
   @override
   State<Gallery> createState() => _GalleryState();
@@ -80,13 +81,16 @@ class _GalleryState extends State<Gallery> {
 
   @override
   Widget build(BuildContext context) {
+    
     return ElevatedButton(
       onPressed: () {
-        // loadImage(ImageSource.gallery).then((value) => Navigator.push(
-        //     context, MaterialPageRoute(builder: ((context) => HomeScreen()))));
-        loadImage(ImageSource.gallery);
-        print(" number ${Model.imageList.length}");
-        print("darrel");
+        loadImage(ImageSource.gallery)
+            .then((value) => Future.microtask(() => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: ((context) => const HomeScreen(
+                          currentTabIndex: 1,
+                        ))))));
       },
       style: ElevatedButton.styleFrom(
         shape: const RoundedRectangleBorder(

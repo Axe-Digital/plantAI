@@ -5,7 +5,6 @@ import 'package:plant_ai/view/home_page.dart';
 import 'package:plant_ai/view/register_screen.dart';
 import 'package:plant_ai/widgets/my_button.dart';
 import 'package:plant_ai/widgets/my_textfield.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -163,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     context,
                                     MaterialPageRoute(
                                         // ignore: prefer_const_constructors
-                                        builder: (context) => HomeScreen()));
+                                        builder: (context) => HomeScreen(currentTabIndex: 0,)));
                               }
                             });
                           },
