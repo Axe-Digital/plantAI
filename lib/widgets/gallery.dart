@@ -1,5 +1,4 @@
 import 'dart:io' as io;
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -72,25 +71,24 @@ class _GalleryState extends State<Gallery> {
     // level of the prediction.
     setState(() {
       if (result[0] < 0.5) {
-        Model.setPlantHealth = "La tomate est en bonne sante";
-      } else {
         Model.setPlantHealth = "La tomate n'est pas en bonne sante";
+      } else {
+        Model.setPlantHealth = "La tomate est en bonne sante";
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return ElevatedButton(
-      onPressed: () {
-        loadImage(ImageSource.gallery)
-            .then((value) => Future.microtask(() => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: ((context) => const HomeScreen(
-                          currentTabIndex: 1,
-                        ))))));
+      onPressed: () async {
+        await loadImage(ImageSource.gallery);
+        if (!mounted) return;
+        await Navigator.of(context).push(MaterialPageRoute(
+            // ignore: prefer_const_constructors
+            builder: ((context) => HomeScreen(
+                  currentTabIndex: 1,
+                ))));
       },
       style: ElevatedButton.styleFrom(
         shape: const RoundedRectangleBorder(

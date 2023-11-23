@@ -5,7 +5,6 @@ import 'package:plant_ai/auth/authentification.dart';
 import 'package:plant_ai/services/firestore.dart';
 import 'package:plant_ai/view/home_page.dart';
 import 'package:plant_ai/widgets/snackbar_utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MyButton extends StatefulWidget {
   final GlobalKey<FormState> formField;

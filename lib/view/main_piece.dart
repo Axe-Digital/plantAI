@@ -63,7 +63,7 @@ class _MainPieceState extends State<MainPiece> {
             ],
           ),
           SizedBox(
-            height: height * 0.09,
+            height: height * 0.04,
           ),
           Stack(children: [
             SizedBox(
@@ -87,7 +87,7 @@ class _MainPieceState extends State<MainPiece> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                              "L'optiminisation de l'agricultur \nen avec l'IA et la vision la vision \npar Ordiateur",
+                              "L'optiminisation de l'agriculture \navec l'IA et la vision assistée \npar ordiateur",
                               style: TextStyle(
                                   fontSize: theme.bodyMedium!.fontSize,
                                   color: theme.bodyMedium!.color,

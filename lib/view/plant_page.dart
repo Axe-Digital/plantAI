@@ -35,10 +35,6 @@ class _PlantesScreenState extends State<PlantesScreen> {
           children: [
             Container(
               width: width * 0.9,
-              // decoration: BoxDecoration(
-              //   borderRadius: BorderRadius.circular(15),
-              //   // color: Colors.white,
-              // ),
               child: TextField(
                 controller: textEditingTextField,
                 // style: const TextStyle(color: Colors.white),
@@ -102,7 +98,7 @@ class _PlantesScreenState extends State<PlantesScreen> {
                                   height: 1000,
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                   width: width / 4,
                                   height: height / 5,
                                   // color: Colors.red,
@@ -120,8 +116,13 @@ class _PlantesScreenState extends State<PlantesScreen> {
                                       const SizedBox(
                                         height: 40,
                                       ),
-                                      const Text(
-                                        "cette tomate est malade",
+                                      Text(
+                                        Model.getPlantHealth!,
+                                        style: TextStyle(
+                                            fontStyle:
+                                                theme.bodyMedium!.fontStyle,
+                                            fontSize:
+                                                theme.bodyMedium!.fontSize),
                                       ),
                                     ],
                                   )),
