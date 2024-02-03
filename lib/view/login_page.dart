@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 // logo
                 Container(
-                  margin: const EdgeInsets.only(top: 40),
+                  margin: const EdgeInsets.only(top: 20),
                   child: Image.asset(
                     "assets/plantai2.png",
                     height: 140,
@@ -162,14 +162,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                     context,
                                     MaterialPageRoute(
                                         // ignore: prefer_const_constructors
-                                        builder: (context) => HomeScreen(currentTabIndex: 0,)));
+                                        builder: (context) => HomeScreen(
+                                              currentTabIndex: 0,
+                                            )));
                               }
                             });
                           },
                           icon: Image.asset(
                             "assets/logo/google-logo.png",
-                            height: 100,
-                            width: 100,
+                            height: 40,
+                            width: 50,
                           )),
 
                       const SizedBox(width: 25),

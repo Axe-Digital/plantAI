@@ -36,7 +36,8 @@ class _CameraAppState extends State<CameraApp> {
       if (!mounted) return;
       await Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => const HomeScreen(
+          // ignore: prefer_const_constructors
+          builder: (context) => HomeScreen(
             currentTabIndex: 1,
           ),
         ),
@@ -77,7 +78,7 @@ class _CameraAppState extends State<CameraApp> {
             return Stack(
               alignment: Alignment.topCenter,
               children: [
-                Container(
+                SizedBox(
                   height: double.infinity,
                   width: width,
                   child: CameraPreview(_cameraController),

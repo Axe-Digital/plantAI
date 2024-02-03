@@ -37,39 +37,41 @@ class _MyButtonState extends State<MyButton> {
 
     signIn() async {
       try {
-        try {
-          final credential = await FirebaseAuth.instance
-              .signInWithEmailAndPassword(
-                  email: widget.emailController.text,
-                  password: widget.passwordController.text);
-        } on FirebaseAuthException catch (e) {
-          print("Error Error $e");
+        await auth.signInWithEmailAndPassword(
+            email: widget.emailController.text,
+            password: widget.passwordController.text,
+            showErrorSnackbar: showSnackBarMessage);
+      } on FirebaseAuthException catch (e) {
+        print("Error Error $e");
+        if (!mounted) return;
 
-          if (e.code == 'user-not-found') {
-            return showSnackBarMessage("No user found for that email.",
-                context: context);
-          } else if (e.code == 'wrong-password') {
-            return showSnackBarMessage("Wrong password provided for that user.",
-                context: context);
-          }
-        } catch (e) {
-          print("Error Error $e");
+        if (e.code == 'user-not-found') {
+          // await showSnackBarMessage(
+          //   "No user found for that email.",
+          // );
+        } else if (e.code == 'wrong-password') {
+          // await showSnackBarMessage(
+          //   "Wrong password provided for that user.",
+          // );
         }
-
-        await Firestore.getFirstName().then((value) {
-          print("my_button");
-          print(value);
-          Firestore.saveUserName = value;
-          if (auth.userId != null) {
-            Navigator.pushReplacement(
-                context,
-                // ignore: prefer_const_constructors
-                MaterialPageRoute(builder: (context) => HomeScreen(currentTabIndex: 0,)));
-          }
-        });
       } catch (e) {
-        print(e);
+        print("Error Error $e");
       }
+
+      await Firestore.getFirstName().then((value) {
+        print("my_button");
+        print("value : $value");
+        Firestore.saveUserName = value;
+        if (auth.userId != null) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  // ignore: prefer_const_constructors
+                  builder: (context) => HomeScreen(
+                        currentTabIndex: 0,
+                      )));
+        }
+      });
     }
 
     return InkWell(

@@ -27,120 +27,114 @@ class _PlantesScreenState extends State<PlantesScreen> {
     final theme = Theme.of(context).textTheme;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return Builder(builder: (context) {
-      return Scaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          // mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: width * 0.9,
-              child: TextField(
-                controller: textEditingTextField,
-                // style: const TextStyle(color: Colors.white),
-                maxLines: null,
-                decoration: InputDecoration(
-                  // fillColor: theme.bodyMedium!.color,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                    borderSide: const BorderSide(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                    borderSide: BorderSide(
-                      color: Colors.green.withOpacity(0.5),
-                    ),
-                  ),
 
-                  prefixIcon: const Icon(Icons.search),
-                  hintStyle: theme.bodyMedium!,
-                  hintText: 'Recherhcer des plantes',
-                  border: InputBorder.none,
+    return Scaffold(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        // mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: EdgeInsets.only(bottom: 20),
+            width: width * 0.9,
+            child: TextField(
+              controller: textEditingTextField,
+              // style: const TextStyle(color: Colors.white),
+              maxLines: null,
+              decoration: InputDecoration(
+                // fillColor: theme.bodyMedium!.color,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                  borderSide: const BorderSide(
+                    color: Colors.grey,
+                  ),
                 ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                  borderSide: BorderSide(
+                    color: Colors.green.withOpacity(0.5),
+                  ),
+                ),
+
+                prefixIcon: const Icon(Icons.search),
+                hintStyle: theme.bodyMedium!,
+                hintText: 'Rechercher des plantes',
+                border: InputBorder.none,
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: Model.imageList.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      SizedBox(
-                        height: height / 20,
-                      ),
-                      Material(
-                        borderRadius: BorderRadius.circular(20),
-                        elevation: 20,
-                        child: Container(
-                          width: width / 1.2,
-                          height: height / 4,
-                          decoration: BoxDecoration(
-                              color: Colors.green.withOpacity(0.55),
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: height / 5,
-                                width: width / 3,
+          ),
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: Model.imageList.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    Material(
+                      borderRadius: BorderRadius.circular(20),
+                      elevation: 20,
+                      child: Container(
+                        width: width / 1.2,
+                        height: height / 4,
+                        decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.55),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: height / 5,
+                              width: width / 3,
 
-                                // color: Colors.red,
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 20),
-                                // child: Text("data"),
-                                child: Image.file(
-                                  Model.imageList[index],
-                                  width: 100,
-                                  height: 1000,
-                                ),
+                              // color: Colors.red,
+                              margin: const EdgeInsets.symmetric(vertical: 20),
+                              // child: Text("data"),
+                              child: Image.file(
+                                Model.imageList[index],
+                                width: 100,
+                                height: 1000,
                               ),
-                              SizedBox(
-                                  width: width / 4,
-                                  height: height / 5,
-                                  // color: Colors.red,
-                                  child: Column(
-                                    children: [
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      Text(
-                                        "Picture ${index + 1}",
-                                        style: TextStyle(
-                                            fontSize:
-                                                theme.bodyMedium!.fontSize),
-                                      ),
-                                      const SizedBox(
-                                        height: 40,
-                                      ),
-                                      Text(
-                                        Model.getPlantHealth!,
-                                        style: TextStyle(
-                                            fontStyle:
-                                                theme.bodyMedium!.fontStyle,
-                                            fontSize:
-                                                theme.bodyMedium!.fontSize),
-                                      ),
-                                    ],
-                                  )),
-                            ],
-                          ),
+                            ),
+                            SizedBox(
+                                width: width / 4,
+                                height: height / 5,
+                                // color: Colors.red,
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      "Picture ${index + 1}",
+                                      style: TextStyle(
+                                          fontSize: theme.bodyMedium!.fontSize),
+                                    ),
+                                    const SizedBox(
+                                      height: 40,
+                                    ),
+                                    Text(
+                                      Model.getPlantHealth!,
+                                      style: TextStyle(
+                                          fontStyle:
+                                              theme.bodyMedium!.fontStyle,
+                                          fontSize: theme.bodyMedium!.fontSize),
+                                    ),
+                                  ],
+                                )),
+                          ],
                         ),
                       ),
-                      SizedBox(
-                        height: height / 50,
-                      ),
-                    ],
-                  );
-                },
-              ),
+                    ),
+                    SizedBox(
+                      height: height / 50,
+                    ),
+                  ],
+                );
+              },
             ),
-          ],
-        ),
-      );
-    });
+          ),
+        ],
+      ),
+    );
   }
 }

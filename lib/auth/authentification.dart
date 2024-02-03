@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-
 class Auth {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
@@ -44,16 +43,18 @@ class Auth {
     return auth.currentUser?.displayName?.split(' ')[0];
   }
 
-  signInWithEmailAndPassword(String email, String password,
-      dynamic Function(String) showErrorSnackbar) async {
+  signInWithEmailAndPassword(
+      {String? email,
+      String? password,
+      dynamic Function(String)? showErrorSnackbar}) async {
     try {
-       await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email!, password: password!);
     } on FirebaseAuthException catch (e) {
       if (e.code == "user-not-found") {
-        return showErrorSnackbar("No user found for that email.");
+        return showErrorSnackbar!("No user found for that email.");
       } else if (e.code == "wrong-password") {
-        return showErrorSnackbar("Wrong password provided for that user");
+        return showErrorSnackbar!("Wrong password provided for that user");
       }
     }
   }

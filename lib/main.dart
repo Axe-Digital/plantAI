@@ -43,8 +43,9 @@ class _MyAppState extends State<MyApp> {
               appBarTheme: AppBarTheme(color: Colors.grey[200]),
               scaffoldBackgroundColor: Colors.grey[200]),
           darkTheme: ThemeData.dark().copyWith(
+            appBarTheme: const AppBarTheme(backgroundColor: Color(0xFF424242),),
               buttonTheme: const ButtonThemeData(buttonColor: Colors.black),
-              scaffoldBackgroundColor: Color(0xFF424242),
+              scaffoldBackgroundColor: const Color(0xFF424242),
               textTheme: ThemeData.dark().textTheme.copyWith(
                     bodyLarge: const TextStyle(color: Colors.black),
                   )),

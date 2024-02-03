@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_ai/auth/authentification.dart';
 import 'package:plant_ai/model/camera_manager.dart';
 import 'package:plant_ai/view/camera_page.dart';
 import 'package:plant_ai/view/plant_page.dart';
@@ -14,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final auth = Auth();
   int _currentTabIndex = 0;
 
   @override
@@ -62,11 +64,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          // Auth().handleSignOut(auth);
           await CameraManager.openCamera().then((camera) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CameraApp(camera: camera)));
+            if (!mounted) return;
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CameraApp(camera: camera)));
           });
         },
         backgroundColor: Colors.green,
