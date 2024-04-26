@@ -33,6 +33,9 @@ class _PlantesScreenState extends State<PlantesScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         // mainAxisSize: MainAxisSize.min,
         children: [
+          SizedBox(
+            height: height * 0.02,
+          ),
           Container(
             padding: EdgeInsets.only(bottom: 20),
             width: width * 0.9,
@@ -83,7 +86,7 @@ class _PlantesScreenState extends State<PlantesScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
-                              height: height / 5,
+                              height: height / 2,
                               width: width / 3,
 
                               // color: Colors.red,
@@ -93,6 +96,7 @@ class _PlantesScreenState extends State<PlantesScreen> {
                                 Model.imageList[index],
                                 width: 100,
                                 height: 1000,
+                                fit: BoxFit.cover,
                               ),
                             ),
                             SizedBox(

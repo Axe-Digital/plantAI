@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     MaterialPageRoute(
                                         // ignore: prefer_const_constructors
                                         builder: (context) => HomeScreen(
-                                              currentTabIndex: 0,
+                                        
                                             )));
                               }
                             });

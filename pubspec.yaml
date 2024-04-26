@@ -55,6 +55,8 @@ dependencies:
   flutter_slidable: ^3.0.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  smooth_page_indicator: ^1.1.0
+  lottie: ^3.0.0
   # toggle_switch: ^2.1.0
   # firebase_ui_auth: ^1.9.0
   # firebase_ui_oauth_facebook: ^1.2.12

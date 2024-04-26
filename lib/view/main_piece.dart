@@ -66,48 +66,42 @@ class _MainPieceState extends State<MainPiece> {
             height: height * 0.04,
           ),
           Stack(children: [
-            SizedBox(
-              width: width,
-              height: height / 3.5,
-              child: Center(
-                child: Container(
-                    width: width * 0.8,
-                    height: height / 6,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-
-                      color: Colors.green.withOpacity(0.55),
-                      // border: Border.all(color: Colors.black)
-                    ),
-                    child: Container(
-                      // color: Colors.amber,
-                      margin: EdgeInsets.fromLTRB(width / 20, 0, 0, 0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              "L'optiminisation de l'agriculture \navec l'IA et la vision assistée \npar ordiateur",
-                              style: TextStyle(
-                                  fontSize: theme.bodyMedium!.fontSize,
-                                  color: theme.bodyMedium!.color,
-                                  fontWeight: theme.bodyMedium!.fontWeight)),
-                        ],
-                      ),
-                    )),
-              ),
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                SizedBox(
+                  height: height * 0.2,
+                  width: double.infinity,
+                  // color: Colors.red,
+                ),
+                Container(
+                  alignment: const Alignment(-0.6, 0),
+                  height: height * 0.13,
+                  width: width * 0.9,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    color: Colors.green.withOpacity(0.55),
+                  ),
+                  child: Text(
+                      "L'optiminisation de l'agriculture \navec l'IA et la vision assistée \npar ordiateur",
+                      style: TextStyle(
+                          fontSize: theme.bodyMedium!.fontSize,
+                          color: theme.bodyMedium!.color,
+                          fontWeight: theme.bodyMedium!.fontWeight)),
+                ),
+              ],
             ),
             Positioned(
               right: 0,
-              top: 0,
               child: Image.asset(
                 'assets/plant.png',
                 height: height / 5,
+                fit: BoxFit.cover,
               ),
             )
           ]),
           SizedBox(
-            height: height * 0.04,
+            height: height * 0.1,
           ),
           SizedBox(
             width: width * 0.8,

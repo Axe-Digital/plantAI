@@ -68,7 +68,7 @@ class _MyButtonState extends State<MyButton> {
               MaterialPageRoute(
                   // ignore: prefer_const_constructors
                   builder: (context) => HomeScreen(
-                        currentTabIndex: 0,
+                   
                       )));
         }
       });

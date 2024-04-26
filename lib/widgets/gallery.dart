@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
+import 'package:plant_ai/model/camera_manager.dart';
 import 'package:plant_ai/view/home_page.dart';
 
 import 'package:plant_ai/model/model.dart';
@@ -83,12 +84,11 @@ class _GalleryState extends State<Gallery> {
     return ElevatedButton(
       onPressed: () async {
         await loadImage(ImageSource.gallery);
-        if (!mounted) return;
+        if (!context.mounted) return;
         await Navigator.of(context).push(MaterialPageRoute(
             // ignore: prefer_const_constructors
-            builder: ((context) => HomeScreen(
-                  currentTabIndex: 1,
-                ))));
+            builder: ((context) => HomeScreen(currentTabIndex: 1,))));
+        await CameraManager.stop();
       },
       style: ElevatedButton.styleFrom(
         shape: const RoundedRectangleBorder(

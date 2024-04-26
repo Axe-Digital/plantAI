@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import "package:flutter/material.dart";
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -26,14 +26,14 @@ class Auth {
     }
   }
 
-  Future<void> handleSignOut(Auth auth) async {
+  Future<void> handleSignOut() async {
     try {
       print(' AUTH : ${FirebaseAuth.instance.currentUser?.uid}');
+      await auth.signOut();
       await googleSignIn.signOut();
-      await auth.auth.signOut();
       // print(object)
       print(' AUTH : ${FirebaseAuth.instance.currentUser?.uid}');
-      await auth.auth.currentUser!.delete();
+      await auth.currentUser!.delete();
     } catch (e) {
       print("error signing out: $e");
     }
@@ -43,10 +43,10 @@ class Auth {
     return auth.currentUser?.displayName?.split(' ')[0];
   }
 
-  signInWithEmailAndPassword(
+  dynamic signInWithEmailAndPassword(
       {String? email,
       String? password,
-      dynamic Function(String)? showErrorSnackbar}) async {
+      dynamic Function(String, {BuildContext context})? showErrorSnackbar}) async {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email!, password: password!);

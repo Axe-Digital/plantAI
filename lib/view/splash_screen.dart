@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:plant_ai/auth/authentification.dart';
+import 'package:plant_ai/test.dart';
 import 'package:plant_ai/view/home_page.dart';
 import 'package:plant_ai/view/login_page.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({super.key,});
 
   @override
   State createState() => _SplashPageState();
 }
 
 class _SplashPageState extends State<SplashScreen> {
-  Auth auth = Auth();
-  late String? user = auth.userId;
+  // Auth auth = Auth();
+  // final PageController _controller = PageController();
+  final String? _user = Auth().userId;
 
   @override
   void initState() {
     super.initState();
     // Définir une temporisation pour afficher la page de splash
-    Future.delayed(const Duration(seconds: 4), () {
-      switchEvent(); // Naviguer vers la page suivante après la temporisation
-    });
+    Future.delayed(const Duration(seconds: 4), switchEvent);
   }
 
   Future<void> switchEvent() async {
     try {
-      if (user != null) {
-        Navigator.pushReplacement(
-          context,
+      if (_user != null) {
+        Navigator.of(context).pushReplacement(
           // ignore: prefer_const_constructors
           PageRouteBuilder(
             transitionDuration: const Duration(
@@ -35,7 +34,7 @@ class _SplashPageState extends State<SplashScreen> {
                     2), // Durée de l'animation (500 millisecondes dans cet exemple)
             pageBuilder: (context, animation, secondaryAnimation) =>
                 // ignore: prefer_const_constructors
-                HomeScreen(currentTabIndex: 0,),
+                HomeScreen(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               var begin = const Offset(
@@ -57,10 +56,12 @@ class _SplashPageState extends State<SplashScreen> {
           ),
         );
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
-        );
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const OnBoardingScreen()));
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const LoginScreen()),
+        // );
       }
     } catch (e) {
       print('eror');

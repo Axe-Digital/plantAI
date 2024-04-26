@@ -8,7 +8,7 @@ import 'package:plant_ai/widgets/my_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   final int currentTabIndex;
-  const HomeScreen({super.key, required this.currentTabIndex});
+  const HomeScreen({super.key, this.currentTabIndex = 0});
 
   @override
   State<StatefulWidget> createState() => _HomeScreenState();
@@ -16,12 +16,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final auth = Auth();
-  int _currentTabIndex = 0;
+  late int _currentTabIndex = widget.currentTabIndex;
 
   @override
   void initState() {
     super.initState();
-    _currentTabIndex = widget.currentTabIndex;
   }
 
   @override
@@ -31,6 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+
     final List<Widget> kTabPages = [
       const MainPiece(),
       const PlantesScreen(),
@@ -49,7 +50,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       // ignore: prefer_const_constructors
-      appBar: MyAppBar(),
+      appBar: MyAppBar(
+        prefferedHeight: height * 0.07,
+      ),
       resizeToAvoidBottomInset: false,
       body: kTabPages[_currentTabIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -65,11 +68,9 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           // Auth().handleSignOut(auth);
-          await CameraManager.openCamera().then((camera) {
-            if (!mounted) return;
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => CameraApp(camera: camera)));
-          });
+          if (!mounted) return;
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => CameraApp()));
         },
         backgroundColor: Colors.green,
         child: const Icon(Icons.camera_alt_outlined),

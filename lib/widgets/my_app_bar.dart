@@ -3,15 +3,18 @@ import 'package:plant_ai/theme/theme_manager.dart';
 import 'package:provider/provider.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const MyAppBar({super.key});
+  final double prefferedHeight;
+  const MyAppBar({super.key, required this.prefferedHeight});
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    // final height = MediaQuery.of(context).size.height;
+
     return AppBar(
       automaticallyImplyLeading: false,
       title: Container(
-        margin: const EdgeInsets.only(top: 20),
+        // margin: const EdgeInsets.only(top: 20),
         child: Row(
           children: [
             Icon(
@@ -33,12 +36,11 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       actions: [
         Container(
-          margin: const EdgeInsets.only(top: 20),
+          // margin: const EdgeInsets.only(top: 20),
           child: Row(
             children: [
               const Icon(Icons.search),
               SizedBox(width: width * 0.05),
-
               Center(
                   child: Container(
                       width: 40,
@@ -55,5 +57,5 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(80);
+  Size get preferredSize =>  Size.fromHeight(prefferedHeight);
 }
