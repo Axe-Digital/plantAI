@@ -6,7 +6,7 @@ import 'package:plant_ai/services/firestore.dart';
 import 'package:plant_ai/view/home_page.dart';
 import 'package:plant_ai/widgets/snackbar_utils.dart';
 
-class MyButton extends StatefulWidget {
+class MyButton extends StatelessWidget {
   final GlobalKey<FormState> formField;
   final TextEditingController passwordController;
   final TextEditingController emailController;
@@ -21,29 +21,19 @@ class MyButton extends StatefulWidget {
   });
 
   @override
-  State<MyButton> createState() => _MyButtonState();
-}
-
-class _MyButtonState extends State<MyButton> {
-  bool isLoading = true;
-  late ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
-  // late SharedPreferences prefs;
-  final auth = Auth();
-  late UserCredential credential;
-
-  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-    signIn() async {
+    Future signIn() async {
       try {
-        await auth.signInWithEmailAndPassword(
-            email: widget.emailController.text,
-            password: widget.passwordController.text,
-            showErrorSnackbar: showSnackBarMessage);
+        await Auth.signInWithEmailAndPassword(
+          context,
+          email: emailController.text,
+          password: passwordController.text,
+        );
       } on FirebaseAuthException catch (e) {
         print("Error Error $e");
-        if (!mounted) return;
+        if (!context.mounted) return;
 
         if (e.code == 'user-not-found') {
           // await showSnackBarMessage(
@@ -61,44 +51,33 @@ class _MyButtonState extends State<MyButton> {
       await Firestore.getFirstName().then((value) {
         print("my_button");
         print("value : $value");
-        Firestore.saveUserName = value;
-        if (auth.userId != null) {
+        Firestore.userName = value;
+        if (Auth.userId != null) {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   // ignore: prefer_const_constructors
-                  builder: (context) => HomeScreen(
-                   
-                      )));
+                  builder: (context) => HomeScreen()));
         }
       });
     }
 
     return InkWell(
       onTap: () {
-        if (widget.formField.currentState!.validate()) {
+        if (formField.currentState!.validate()) {
           signIn();
           print("Data Added Successfully");
         }
       },
       child: Container(
-        height: 50,
-        width: width * 0.6,
-        decoration: BoxDecoration(
-            color: Colors.indigo, borderRadius: BorderRadius.circular(20)),
-        child: Center(
-          child: isLoading
-              ? Text(
-                  widget.title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              : const CircularProgressIndicator(),
-        ),
-      ),
+          width: width - 50,
+          height: 50,
+          decoration: BoxDecoration(color: Colors.orange),
+          child: Center(
+              child: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ))),
     );
   }
 }

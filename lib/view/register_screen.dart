@@ -32,17 +32,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void submit() async {
     if (formField.currentState!.validate()) {
       try {
-        await auth.createUserWithEmailAndPassword(
-            emailController.text, passwordController.text, showSnackBarMessage);
+        await Auth.createUserWithEmailAndPassword(
+            emailController.text, passwordController.text, showSnackBarMessage as BuildContext);
         final user = Firestore(
             firstName: firstNameController.text,
             lastName: lastNameController.text,
             number: contactController.text,
             email: emailController.text,
             password: passwordController.text);
-        Firestore.saveUserName = firstNameController.text;
+        Firestore.userName = firstNameController.text;
         user.uploadData().then((value) {
-          if (auth.userId != null) {
+          if (Auth.userId != null) {
             Navigator.push(
                 context,
                 // ignore: prefer_const_constructors

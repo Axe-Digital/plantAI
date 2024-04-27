@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:plant_ai/auth/authentification.dart';
 import 'package:plant_ai/services/firestore.dart';
-import 'package:pie_chart/pie_chart.dart';
-import 'package:plant_ai/model/model.dart';
+// import 'package:pie_chart/pie_chart.dart';
+// import 'package:plant_ai/model/model.dart';
 
 class MainPiece extends StatefulWidget {
   const MainPiece({super.key});
@@ -42,7 +42,7 @@ class _MainPieceState extends State<MainPiece> {
                   ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: auth.firstNameAuth() ?? Firestore.userName,
+                      text: Firestore.userName ?? auth.firstNameAuth(),
                       style: TextStyle(
                         fontSize: theme.headlineSmall!.fontSize,
                         color: theme.headlineSmall!.color,
@@ -62,61 +62,7 @@ class _MainPieceState extends State<MainPiece> {
               )
             ],
           ),
-          SizedBox(
-            height: height * 0.04,
-          ),
-          Stack(children: [
-            Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                SizedBox(
-                  height: height * 0.2,
-                  width: double.infinity,
-                  // color: Colors.red,
-                ),
-                Container(
-                  alignment: const Alignment(-0.6, 0),
-                  height: height * 0.13,
-                  width: width * 0.9,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: Colors.green.withOpacity(0.55),
-                  ),
-                  child: Text(
-                      "L'optiminisation de l'agriculture \navec l'IA et la vision assistée \npar ordiateur",
-                      style: TextStyle(
-                          fontSize: theme.bodyMedium!.fontSize,
-                          color: theme.bodyMedium!.color,
-                          fontWeight: theme.bodyMedium!.fontWeight)),
-                ),
-              ],
-            ),
-            Positioned(
-              right: 0,
-              child: Image.asset(
-                'assets/plant.png',
-                height: height / 5,
-                fit: BoxFit.cover,
-              ),
-            )
-          ]),
-          SizedBox(
-            height: height * 0.1,
-          ),
-          SizedBox(
-            width: width * 0.8,
-            height: height / 5,
-            child: PieChart(
-              emptyColor: Colors.black,
-              dataMap: Model().dataMap,
-              chartType: ChartType.ring,
-              colorList: const [Colors.green],
-              baseChartColor: Colors.green.withOpacity(0.15),
-              chartRadius: 4000,
-              totalValue: 20,
-            ),
-          ),
-        ],
+     ],
       ),
     );
   }

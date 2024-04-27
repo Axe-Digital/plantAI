@@ -18,19 +18,16 @@ class MyTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-      child: TextFormField(
-        controller: controller,
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          labelText: hintText,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-          prefixIcon: prefix,
-          suffixIcon: suffixIcon 
-        ),
-        validator: validator,
+    return TextFormField(
+      controller: controller,
+      obscureText: obscureText,
+      decoration: InputDecoration(
+        labelText: hintText,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+        prefixIcon: prefix,
+        suffixIcon: suffixIcon 
       ),
+      validator: validator,
     );
   }
 }

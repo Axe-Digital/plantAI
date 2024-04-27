@@ -1,15 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:plant_ai/auth/authentification.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Firestore {
-  final db = FirebaseFirestore.instance;
-  final auth = Auth();
-  static String? userName;
-  // String get name
-  static set saveUserName(String? _) {
-    userName = _;
-  }
+  final _db = FirebaseFirestore.instance;
+  late SharedPreferences sharedPreferences;
+  static String? _userName = '';
+  static String? get userName => _userName;
+  static set userName(String? x) => _userName = userName;
 
   final String? firstName;
   final String? lastName;
@@ -48,8 +46,13 @@ class Firestore {
     };
   }
 
+  Future<void> init() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    userName = sharedPreferences.getString('userName');
+  }
+
   Future<void> uploadData() async {
-    final userId = auth.userId;
+    final userId = Auth.userId;
     print("userId => $userId");
     print(firstName);
     print(lastName);
@@ -62,12 +65,12 @@ class Firestore {
         number: number,
         email: email,
         password: password);
-    final docRef = db
+    final docRef = _db
         .collection("users")
         .withConverter(
             fromFirestore: Firestore.fromFirestore,
             toFirestore: (Firestore user, options) => user.toFirestore())
-        .doc(auth.userId);
+        .doc(userId);
     await docRef.set(user);
   }
 
@@ -75,7 +78,7 @@ class Firestore {
     final db = FirebaseFirestore.instance;
     final auth = Auth();
     try {
-      final ref = db.collection("users").doc(auth.userId).withConverter(
+      final ref = db.collection("users").doc(Auth.userId).withConverter(
           fromFirestore: Firestore.fromFirestore,
           toFirestore: (Firestore user, options) => user.toFirestore());
       final docSnap = await ref.get();

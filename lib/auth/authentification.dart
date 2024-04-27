@@ -1,24 +1,25 @@
 import 'dart:async';
 import "package:flutter/material.dart";
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:plant_ai/widgets/snackbar_utils.dart';
 
 class Auth {
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  final firestore = FirebaseFirestore.instance;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
-  String? get userId => auth.currentUser?.uid;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+  static final GoogleSignIn _googleSignIn = GoogleSignIn();
+  static String? get userId => _auth.currentUser?.uid;
+  static User? get currentUser => _auth.currentUser;
 
   // Google Sign In
-  Future<void> hangleSignIn() async {
+  static Future<void> hangleSignIn() async {
     try {
-      GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser != null) {
         GoogleSignInAuthentication googleAuth = await googleUser.authentication;
         AuthCredential credential = GoogleAuthProvider.credential(
             accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-        await auth.signInWithCredential(credential);
+        await _auth.signInWithCredential(credential);
         // firstName = user?.displayName;
       }
     } catch (e) {
@@ -26,52 +27,64 @@ class Auth {
     }
   }
 
-  Future<void> handleSignOut() async {
+
+
+  static Future<void> logout() async => _auth.signOut();
+
+  static Future<void> handleSignOut() async {
     try {
       print(' AUTH : ${FirebaseAuth.instance.currentUser?.uid}');
-      await auth.signOut();
-      await googleSignIn.signOut();
-      // print(object)
-      print(' AUTH : ${FirebaseAuth.instance.currentUser?.uid}');
-      await auth.currentUser!.delete();
+      // print(_googleSignIn);
+      await _googleSignIn.signOut();
+      await _auth.signOut();
     } catch (e) {
       print("error signing out: $e");
     }
   }
 
   String? firstNameAuth() {
-    return auth.currentUser?.displayName?.split(' ')[0];
+    return _auth.currentUser?.displayName?.split(' ')[0];
   }
 
-  dynamic signInWithEmailAndPassword(
-      {String? email,
-      String? password,
-      dynamic Function(String, {BuildContext context})? showErrorSnackbar}) async {
+  static signInWithEmailAndPassword(
+    BuildContext context, {
+    String? email,
+    String? password,
+  }) async {
     try {
-      await FirebaseAuth.instance
+      await _auth
           .signInWithEmailAndPassword(email: email!, password: password!);
     } on FirebaseAuthException catch (e) {
       if (e.code == "user-not-found") {
-        return showErrorSnackbar!("No user found for that email.");
+        if (!context.mounted) return;
+
+        showSnackBarMessage("No user found for that email.", context: context);
       } else if (e.code == "wrong-password") {
-        return showErrorSnackbar!("Wrong password provided for that user");
+        if (!context.mounted) return;
+
+        return showSnackBarMessage("Wrong password provided for that user.",
+            context: context);
       }
     }
   }
 
-  dynamic createUserWithEmailAndPassword(
-    email,
-    password,
-    dynamic Function(String) showErrorSnackbar,
+  static dynamic createUserWithEmailAndPassword(
+    String email,
+    String password,
+    BuildContext context,
   ) async {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        return showErrorSnackbar("The password provided is too weak.");
+        if (!context.mounted) return;
+        return showSnackBarMessage("The password provided is too weak.",
+            context: context);
       } else if (e.code == 'email-already-in-use') {
-        return showErrorSnackbar("'The account already exists for that email");
+        if (!context.mounted) return;
+        return showSnackBarMessage("'The account already exists for that email",
+            context: context);
       }
     } catch (e) {
       print(e);

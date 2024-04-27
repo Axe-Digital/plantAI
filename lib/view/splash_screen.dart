@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gif/gif.dart';
 import 'package:plant_ai/auth/authentification.dart';
-import 'package:plant_ai/test.dart';
+import 'package:plant_ai/view/on_boarding_page.dart';
 import 'package:plant_ai/view/home_page.dart';
-import 'package:plant_ai/view/login_page.dart';
+// import 'package:plant_ai/view/login_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key,});
@@ -11,27 +12,26 @@ class SplashScreen extends StatefulWidget {
   State createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashScreen> {
-  // Auth auth = Auth();
-  // final PageController _controller = PageController();
-  final String? _user = Auth().userId;
+class _SplashPageState extends State<SplashScreen>
+    with TickerProviderStateMixin {
+  late GifController _controller;
 
   @override
   void initState() {
     super.initState();
-    // Définir une temporisation pour afficher la page de splash
-    Future.delayed(const Duration(seconds: 4), switchEvent);
+    _controller = GifController(vsync: this);
+    Future.delayed(const Duration(seconds: 3), (() => switchEvent()));
   }
 
   Future<void> switchEvent() async {
     try {
-      if (_user != null) {
+      if (Auth.userId != null && Auth.currentUser!.emailVerified) {
         Navigator.of(context).pushReplacement(
           // ignore: prefer_const_constructors
           PageRouteBuilder(
             transitionDuration: const Duration(
                 seconds:
-                    2), // Durée de l'animation (500 millisecondes dans cet exemple)
+                    3), // Durée de l'animation (500 millisecondes dans cet exemple)
             pageBuilder: (context, animation, secondaryAnimation) =>
                 // ignore: prefer_const_constructors
                 HomeScreen(),
@@ -56,51 +56,32 @@ class _SplashPageState extends State<SplashScreen> {
           ),
         );
       } else {
-        Navigator.pushReplacement(context,
+        Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const OnBoardingScreen()));
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => const LoginScreen()),
-        // );
       }
     } catch (e) {
-      print('eror');
+      print(e);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // final width = MediaQuery.of(context).size.width;
     return Scaffold(
-        backgroundColor: Colors.grey[300],
-
-        // Couleur de fond de la page de splash
-        body: Stack(
-          children: [
-            Center(
-              child: Image.asset('assets/plantai.png'),
-            ),
-            const Positioned(
-              bottom: 20,
-              left: 0,
-              right: 0,
-              child: Column(
-                children: [
-                  Text(
-                    "from",
-                    style: TextStyle(color: Colors.black87, fontSize: 16),
-                  ),
-                  Text(
-                    "Axe Digital",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                        fontSize: 30),
-                  )
-                ],
-              ),
-            )
-          ],
-        ));
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Gif(
+          image: const AssetImage("assets/splash.gif"),
+          controller: _controller,
+          //fps: 30,
+          //duration: const Duration(seconds: 3),
+          autostart: Autostart.no,
+          // placeholder: (context) => const Text('Loading...'),
+          onFetchCompleted: () {
+            _controller.reset();
+            _controller.forward();
+          },
+        ),
+      ),
+    );
   }
 }
